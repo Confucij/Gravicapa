@@ -71,6 +71,16 @@
                    VA+ = 5 V; VA- = 0 V; VD+ = 3 V to 5 V
                    VA+ = 2.5 V; VA- = -2.5 V; VD+ = 3 V
                Package: 24-pin SSOP; lead-free assembly
+            MCP3905 
+                +низкая цена
+                +более доступна
+                -не понятно как забрать показания
+                -она вообще для этого нужна?
+                The MCP3905 is an energy measurement IC supporting the IEC 62053 international
+                energy metering specification. The output of the device includes a frequency 
+                proportional to the average active (real) power at the inputs as well as a higher
+                frequency output proportional to the instantaneous power for meter calibration. 
+               
         в)Освещения
             MAX44000
                 Микросхема состоящая из датчика освещения и двух инфракрасных датчиков. Имеет встроенный драйвер для инфракрасного светодиода.
@@ -106,6 +116,7 @@
             +Большие объемы Flash и RAM
             +Распиновка и внутренне устройство(адреса и названия регистров и т.п.) для различных по производительности контроллеров одинаковая, что позволяет, в зависимости от необходимой
             комплектации применять более или менее производительные чипы не внося изменений в программный код и конструкцию платы.
+    6)Резервное питание, например http://forum.cxem.net/uploads/monthly_03_2011/post-55524-0-84197800-1300698730_thumb.jpg
 
 
     
