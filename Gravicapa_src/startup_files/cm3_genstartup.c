@@ -44,6 +44,7 @@ void SVC_Handler(void) __attribute__ ((weak, alias ("Dummy_Handler")));
 void DebugMon_Handler(void) __attribute__ ((weak, alias ("Dummy_Handler")));
 void PendSV_Handler(void) __attribute__ ((weak, alias ("Dummy_Handler")));
 void SysTick_Handler(void) __attribute__ ((weak, alias ("Dummy_Handler")));
+extern void TIM6_DAC_IRQHandler();
 
 /**
  * The chip specific (STM32L1xx or F1, or LPC, or TI etc) vectors are in a 
@@ -183,4 +184,68 @@ void *vector_table[] __attribute__ ((section(".vectors"))) = {
 	0,
 	PendSV_Handler,
 	SysTick_Handler,
+};
+
+
+void *other_vector_table[] __attribute__ ((section(".vectors.other"))) = {
+0, // Window watchdog interrupt 
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+TIM6_DAC_IRQHandler, //TIM6
+0,
+0, 
+0,
+0,
+0,
 };
