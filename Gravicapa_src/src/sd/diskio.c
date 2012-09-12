@@ -38,9 +38,10 @@
 #include "stm32f10x_spi.h"
 #include "stm32f10x_gpio.h"
 #include "stm32f10x_rcc.h"
+#include "stm32f10x_dma.h"
 
 // demo uses a command line option to define this (see Makefile):
-// #define STM32_SD_USE_DMA
+ #define STM32_SD_USE_DMA
 
 
 #ifdef STM32_SD_USE_DMA
@@ -147,26 +148,6 @@ static void interface_speed( enum speed_setting speed )
 	SPI_SD->CR1 = tmp;
 }
 
-//#if SOCKET_WP_CONNECTED
-///* Socket's Write-Protection Pin: high = write-protected, low = writable */
-//
-//static void socket_wp_init(void)
-//{
-//	GPIO_InitTypeDef GPIO_InitStructure;
-//
-//	/* Configure I/O for write-protect */
-//	RCC_APB2PeriphClockCmd(RCC_APBxPeriph_GPIO_WP, ENABLE);
-//	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_WP;
-//	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_WP;
-//	GPIO_Init(GPIO_WP, &GPIO_InitStructure);
-//}
-//
-//static DWORD socket_is_write_protected(void)
-//{
-//	return ( GPIO_ReadInputData(GPIO_WP) & GPIO_Pin_WP ) ? socket_state_mask_wp : 0;
-//}
-
-//#else
 
 static void socket_wp_init(void)
 {
@@ -178,29 +159,6 @@ static inline DWORD socket_is_write_protected(void)
 	return 0; /* fake not protected */
 }
 
-//#endif /* SOCKET_WP_CONNECTED */
-
-
-//#if SOCKET_CP_CONNECTED
-///* Socket's Card-Present Pin: high = socket empty, low = card inserted */
-//
-//static void socket_cp_init(void)
-//{
-//	GPIO_InitTypeDef GPIO_InitStructure;
-//
-//	/* Configure I/O for card-present */
-//	RCC_APB2PeriphClockCmd(RCC_APBxPeriph_GPIO_CP, ENABLE);
-//	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_CP;
-//	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_CP;
-//	GPIO_Init(GPIO_CP, &GPIO_InitStructure);
-//}
-//
-//static inline DWORD socket_is_empty(void)
-//{
-//	return ( GPIO_ReadInputData(GPIO_CP) & GPIO_Pin_CP ) ? socket_state_mask_cp : FALSE;
-//}
-//
-//#else
 
 static void socket_cp_init(void)
 {
