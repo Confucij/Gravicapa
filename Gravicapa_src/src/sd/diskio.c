@@ -105,10 +105,6 @@
 #define SELECT()        GPIO_ResetBits(GPIO_CS, GPIO_Pin_CS)    /* MMC CS = L */
 #define DESELECT()      GPIO_SetBits(GPIO_CS, GPIO_Pin_CS)      /* MMC CS = H */
 
-/* Manley EK-STM32F board does not offer socket contacts -> dummy values: */
-#define SOCKPORT	1			/* Socket contact port */
-#define SOCKWP		0			/* Write protect switch (PB5) */
-#define SOCKINS		0			/* Card detect switch (PB4) */
 
 #if (_MAX_SS != 512) || (_FS_READONLY == 0) || (STM32_SD_DISK_IOCTRL_FORCE == 1)
 #define STM32_SD_DISK_IOCTRL   1
@@ -454,11 +450,11 @@ void power_on (void)
 	/* Enable SPI clock, SPI1: APB2, SPI2: APB1 */
 	RCC_APBPeriphClockCmd_SPI_SD(RCC_APBPeriph_SPI_SD, ENABLE);
 
-	card_power(1);
-	socket_cp_init();
-	socket_wp_init();
-
-	for (Timer1 = 25; Timer1; );	/* Wait for 250ms */
+//	card_power(1);
+//	socket_cp_init();
+//	socket_wp_init();
+//
+//	for (Timer1 = 25; Timer1; );	/* Wait for 250ms */
 
 	/* Configure I/O for Flash Chip select */
 	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_CS;

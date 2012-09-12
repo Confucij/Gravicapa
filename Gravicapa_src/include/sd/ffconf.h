@@ -14,7 +14,7 @@
 / Functions and Buffer Configurations
 /----------------------------------------------------------------------------*/
 
-#define	_FS_TINY		0	/* 0:Normal or 1:Tiny */
+#define	_FS_TINY		1	/* 0:Normal or 1:Tiny */
 /* When _FS_TINY is set to 1, FatFs uses the sector buffer in the file system
 /  object instead of the sector buffer in the individual file object for file
 /  data transfer. This reduces memory consumption 512 bytes each file object. */
@@ -26,7 +26,7 @@
 /  f_truncate and useless f_getfree. */
 
 
-#define _FS_MINIMIZE	0	/* 0 to 3 */
+#define _FS_MINIMIZE	2	/* 0 to 3 */
 /* The _FS_MINIMIZE option defines minimization level to remove some functions.
 /
 /   0: Full function.
@@ -186,5 +186,11 @@
 /* To enable file lock control feature, set _FS_LOCK to 1 or greater.
    The value defines how many files can be opened simultaneously. */
 
+/*Для уменьшения размера системы возможно исключить из зборки все наименее имспользуемые
+функции, например изменения атрибутов фвйла. Раскоментируйте строку для нормальной системы */
+//#define _SMALL_FS 0
 
 #endif /* _FFCONFIG */
+
+
+
