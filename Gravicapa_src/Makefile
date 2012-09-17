@@ -8,13 +8,13 @@ OBJSIZE=arm-none-eabi-size
 
 
 #Debug mode
-DEBUG=-g -O2
+DEBUG=-g
 #Release mode
 #DEBUG=-O2
 
-#STDPL_FLAGS= -DHSE_VALUE=8000000 -DSTM32F10X_MD
+STDPL_FLAGS= -DHSE_VALUE=8000000 -DSTM32F10X_MD_VL
 
-CCFLAGS=$(DEBUG)  -mlittle-endian -mthumb -ffreestanding -nostdlib 
+CCFLAGS=$(DEBUG) $(STDPL_FLAGS) -mlittle-endian -mthumb -ffreestanding -nostdlib 
 
 
 INCLUDE=-I./libs_stm/inc/base 
@@ -23,16 +23,18 @@ INCLUDE+=-I./libs_stm/inc/device_support
 INCLUDE+=-I./include 
 INCLUDE+=-I./libs_stm/inc/stm32f10x 
 INCLUDE+=-I./include/sd
+INCLUDE+=-I./include/onewire
 
 
 LDSCRIPT=stm32f100xb_flash.ld
 LDFLAGS=-L./startup_files
 LDFLAGS+=-Wl,-T,$(LDSCRIPT)
 
-CCFLAGS+=-mcpu=cortex-m3  -DSTM32F10X_MD_VL
+CCFLAGS+=-mcpu=cortex-m3
 
 SRCDIR=./src 
 SRCDIR+=./src/sd
+SRCDIR+=./src/onewire
 SRCDIR+=./src/hal
 SRC=./startup_files/cm3_genstartup.c 
 SRC+=$(wildcard $(addsuffix /*.c, $(SRCDIR)))
