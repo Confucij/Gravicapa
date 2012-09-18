@@ -36,7 +36,9 @@
 /   3: f_lseek is removed in addition to 2. */
 
 
+<<<<<<< HEAD
 #define	_USE_STRFUNC	1	/* 0:Disable or 1-2:Enable */
+>>>>>>> 4f759e58be5540e7065aa2305686924504f45193
 /* To enable string functions, set _USE_STRFUNC to 1 or 2. */
 
 
