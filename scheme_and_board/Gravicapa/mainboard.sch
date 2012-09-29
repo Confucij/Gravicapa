@@ -5755,9 +5755,8 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <label x="82.55" y="99.06" size="0.8128" layer="95" font="vector" rot="MR0" xref="yes"/>
 </segment>
 <segment>
-<pinref part="U1" gate="PORTC_L" pin="PC0"/>
-<wire x1="-21.59" y1="48.26" x2="-30.48" y2="48.26" width="0.1524" layer="91"/>
-<label x="-30.48" y="48.26" size="0.8128" layer="95" font="fixed" ratio="15" rot="R180" xref="yes"/>
+<wire x1="-21.59" y1="99.06" x2="-30.48" y2="99.06" width="0.1524" layer="91"/>
+<label x="-30.48" y="99.06" size="1.27" layer="95" rot="MR0" xref="yes"/>
 </segment>
 </net>
 <net name="SPI1_MOSI" class="0">
@@ -5819,13 +5818,6 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <wire x1="-21.59" y1="45.72" x2="-27.94" y2="45.72" width="0.1524" layer="91"/>
 <wire x1="-27.94" y1="45.72" x2="-30.48" y2="45.72" width="0.1524" layer="91"/>
 <label x="-30.48" y="45.72" size="0.8128" layer="95" font="fixed" ratio="15" rot="R180" xref="yes"/>
-</segment>
-</net>
-<net name="SPI1_NSS" class="0">
-<segment>
-<pinref part="U1" gate="PORTA_L" pin="PA4"/>
-<wire x1="-21.59" y1="99.06" x2="-29.21" y2="99.06" width="0.1524" layer="91"/>
-<label x="-29.21" y="99.06" size="0.8128" layer="95" font="fixed" ratio="15" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="SPI1_SCK" class="0">
