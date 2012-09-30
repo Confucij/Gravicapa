@@ -491,38 +491,40 @@ Standard 0603 ceramic capacitor, and 0.1" leaded capacitor.</description>
 <part name="L2" library="wuerth-elektronik" deviceset="WE-KIHQ" device="WE-KI_0805" value="BLM"/>
 <part name="D_IN" library="wirepad" deviceset="SMD5" device="" value="1-Wire"/>
 <part name="PWR_IN" library="wirepad" deviceset="SMD5" device="" value="VCC"/>
-<part name="COM-" library="wirepad" deviceset="SMD5" device="" value="GND"/>
+<part name="COM_IN" library="wirepad" deviceset="SMD5" device="" value="GND"/>
 <part name="PWR_OUT" library="wirepad" deviceset="SMD5" device="" value="VCC"/>
 <part name="D_OUT" library="wirepad" deviceset="SMD5" device="" value="1-Wire"/>
 <part name="COM_OUT" library="wirepad" deviceset="SMD5" device="" value="GND"/>
 <part name="D2" library="GravicapaLib" deviceset="BAV199" device=""/>
 <part name="C1" library="GravicapaLib" deviceset="CAP" device="0805" value="0.1uF"/>
+<part name="L1" library="wuerth-elektronik" deviceset="WE-KIHQ" device="WE-KI_0805" value="BLM"/>
 </parts>
 <sheets>
 <sheet>
 <plain>
 </plain>
 <instances>
-<instance part="IC1" gate="A" x="124.46" y="48.26"/>
-<instance part="L2" gate="G$1" x="106.68" y="63.5" rot="R90"/>
-<instance part="D_IN" gate="1" x="81.28" y="71.12"/>
-<instance part="PWR_IN" gate="1" x="81.28" y="55.88"/>
-<instance part="COM-" gate="1" x="81.28" y="40.64"/>
-<instance part="PWR_OUT" gate="1" x="152.4" y="55.88" rot="R180"/>
-<instance part="D_OUT" gate="1" x="152.4" y="71.12" rot="R180"/>
+<instance part="IC1" gate="A" x="132.08" y="48.26"/>
+<instance part="L2" gate="G$1" x="114.3" y="55.88" rot="R90"/>
+<instance part="D_IN" gate="1" x="81.28" y="66.04"/>
+<instance part="PWR_IN" gate="1" x="81.28" y="76.2"/>
+<instance part="COM_IN" gate="1" x="81.28" y="40.64"/>
+<instance part="PWR_OUT" gate="1" x="152.4" y="76.2" rot="R180"/>
+<instance part="D_OUT" gate="1" x="152.4" y="66.04" rot="R180"/>
 <instance part="COM_OUT" gate="1" x="152.4" y="40.64" rot="R180"/>
 <instance part="D2" gate="G$1" x="101.6" y="48.26" rot="R270"/>
 <instance part="C1" gate="G$1" x="91.44" y="50.8" rot="R180"/>
+<instance part="L1" gate="G$1" x="132.08" y="58.42" rot="R90"/>
 </instances>
 <busses>
 </busses>
 <nets>
 <net name="N$1" class="0">
 <segment>
-<wire x1="104.14" y1="48.26" x2="106.68" y2="48.26" width="0.1524" layer="91"/>
-<wire x1="106.68" y1="48.26" x2="116.84" y2="48.26" width="0.1524" layer="91"/>
-<wire x1="106.68" y1="58.42" x2="106.68" y2="48.26" width="0.1524" layer="91"/>
-<junction x="106.68" y="48.26"/>
+<wire x1="104.14" y1="48.26" x2="114.3" y2="48.26" width="0.1524" layer="91"/>
+<wire x1="114.3" y1="48.26" x2="124.46" y2="48.26" width="0.1524" layer="91"/>
+<wire x1="114.3" y1="50.8" x2="114.3" y2="48.26" width="0.1524" layer="91"/>
+<junction x="114.3" y="48.26"/>
 <pinref part="L2" gate="G$1" pin="1"/>
 <pinref part="IC1" gate="A" pin="DATA"/>
 <pinref part="D2" gate="G$1" pin="AC"/>
@@ -530,44 +532,57 @@ Standard 0603 ceramic capacitor, and 0.1" leaded capacitor.</description>
 </net>
 <net name="N$5" class="0">
 <segment>
-<pinref part="PWR_OUT" gate="1" pin="P"/>
 <pinref part="IC1" gate="A" pin="VCC"/>
-<wire x1="124.46" y1="55.88" x2="149.86" y2="55.88" width="0.1524" layer="91"/>
-<wire x1="124.46" y1="53.34" x2="124.46" y2="55.88" width="0.1524" layer="91"/>
-<pinref part="PWR_IN" gate="1" pin="P"/>
-<pinref part="D2" gate="G$1" pin="C"/>
-<wire x1="83.82" y1="55.88" x2="91.44" y2="55.88" width="0.1524" layer="91"/>
-<wire x1="91.44" y1="55.88" x2="101.6" y2="55.88" width="0.1524" layer="91"/>
-<wire x1="101.6" y1="53.34" x2="101.6" y2="55.88" width="0.1524" layer="91"/>
-<pinref part="C1" gate="G$1" pin="2"/>
-<wire x1="91.44" y1="53.34" x2="91.44" y2="55.88" width="0.1524" layer="91"/>
-<wire x1="124.46" y1="55.88" x2="101.6" y2="55.88" width="0.1524" layer="91"/>
+<pinref part="L1" gate="G$1" pin="1"/>
 </segment>
 </net>
 <net name="N$3" class="0">
 <segment>
 <wire x1="83.82" y1="40.64" x2="91.44" y2="40.64" width="0.1524" layer="91"/>
 <wire x1="91.44" y1="40.64" x2="101.6" y2="40.64" width="0.1524" layer="91"/>
-<wire x1="101.6" y1="40.64" x2="124.46" y2="40.64" width="0.1524" layer="91"/>
-<wire x1="124.46" y1="40.64" x2="149.86" y2="40.64" width="0.1524" layer="91"/>
-<pinref part="COM-" gate="1" pin="P"/>
+<wire x1="101.6" y1="40.64" x2="132.08" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="132.08" y1="40.64" x2="149.86" y2="40.64" width="0.1524" layer="91"/>
+<pinref part="COM_IN" gate="1" pin="P"/>
 <pinref part="IC1" gate="A" pin="GND"/>
-<wire x1="124.46" y1="43.18" x2="124.46" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="132.08" y1="43.18" x2="132.08" y2="40.64" width="0.1524" layer="91"/>
 <pinref part="COM_OUT" gate="1" pin="P"/>
 <pinref part="D2" gate="G$1" pin="A"/>
 <wire x1="101.6" y1="43.18" x2="101.6" y2="40.64" width="0.1524" layer="91"/>
 <pinref part="C1" gate="G$1" pin="1"/>
 <wire x1="91.44" y1="45.72" x2="91.44" y2="40.64" width="0.1524" layer="91"/>
+<junction x="101.6" y="40.64"/>
+<junction x="132.08" y="40.64"/>
+<junction x="91.44" y="40.64"/>
 </segment>
 </net>
 <net name="N$2" class="0">
 <segment>
-<wire x1="83.82" y1="71.12" x2="106.68" y2="71.12" width="0.1524" layer="91"/>
-<wire x1="106.68" y1="71.12" x2="106.68" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="83.82" y1="66.04" x2="114.3" y2="66.04" width="0.1524" layer="91"/>
+<wire x1="114.3" y1="66.04" x2="114.3" y2="60.96" width="0.1524" layer="91"/>
 <pinref part="D_IN" gate="1" pin="P"/>
 <pinref part="L2" gate="G$1" pin="2"/>
-<wire x1="106.68" y1="71.12" x2="149.86" y2="71.12" width="0.1524" layer="91"/>
+<wire x1="114.3" y1="66.04" x2="149.86" y2="66.04" width="0.1524" layer="91"/>
 <pinref part="D_OUT" gate="1" pin="P"/>
+<junction x="114.3" y="66.04"/>
+</segment>
+</net>
+<net name="N$4" class="0">
+<segment>
+<pinref part="D2" gate="G$1" pin="C"/>
+<wire x1="101.6" y1="53.34" x2="101.6" y2="76.2" width="0.1524" layer="91"/>
+<wire x1="91.44" y1="76.2" x2="101.6" y2="76.2" width="0.1524" layer="91"/>
+<pinref part="C1" gate="G$1" pin="2"/>
+<wire x1="91.44" y1="53.34" x2="91.44" y2="76.2" width="0.1524" layer="91"/>
+<pinref part="PWR_IN" gate="1" pin="P"/>
+<wire x1="83.82" y1="76.2" x2="91.44" y2="76.2" width="0.1524" layer="91"/>
+<pinref part="L1" gate="G$1" pin="2"/>
+<wire x1="132.08" y1="63.5" x2="132.08" y2="76.2" width="0.1524" layer="91"/>
+<wire x1="132.08" y1="76.2" x2="101.6" y2="76.2" width="0.1524" layer="91"/>
+<junction x="101.6" y="76.2"/>
+<junction x="91.44" y="76.2"/>
+<pinref part="PWR_OUT" gate="1" pin="P"/>
+<wire x1="132.08" y1="76.2" x2="149.86" y2="76.2" width="0.1524" layer="91"/>
+<junction x="132.08" y="76.2"/>
 </segment>
 </net>
 </nets>
