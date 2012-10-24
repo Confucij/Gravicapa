@@ -10,10 +10,7 @@
 	<Document>
 		<LocalLibrary />
 		<Pcb>
-			<File path=".\mainboard.fsx" Folder="-1" isopened="0"/>
-			<File path=".\пара.fsx" Folder="-1" isopened="0"/>
-			<File path=".\board1_gotov.fsx" Folder="-1" isopened="0"/>
-			<File path=".\manual_begin.fsx" Folder="-1" isopened="1"/>
+			<File path=".\manual_route.fsx" Folder="-1" isopened="1"/>
 		</Pcb>
 		<Documents path="D:\Dropbox\study\gravicapa\Gravicapa\scheme_and_board\TopoR\gravicapa_route\"/>
 		<Import>
@@ -22,39 +19,6 @@
 			</Specctra>
 		</Import>
 		<ARouteSessions>
-			<Session name="mainboard" date="2012-10-21 00:27:25" path=".\autoroute_mainboard_121021002725\">
-			<File path=".\autoroute_mainboard_121021002725\mainboard_3841-44sa.fsb" Folder="-1" isopened="0"/>
-			</Session>
-			<Session name="mainboard" date="2012-10-21 00:58:35" path=".\autoroute_mainboard_121021005835\">
-			<File path=".\autoroute_mainboard_121021005835\mainboard_4034-69sa.fsb" Folder="-1" isopened="0"/>
-			</Session>
-			<Session name="mainboard_4034-69sa" date="2012-10-21 01:26:36" path=".\autoroute_mainboard_4034-69sa_121021012636\">
-			<File path=".\autoroute_mainboard_4034-69sa_121021012636\mainboard_4034-69sa_4621-50sa.fsb" Folder="-1" isopened="0"/>
-			</Session>
-			<Session name="mainboard" date="2012-10-21 12:32:47" path=".\autoroute_mainboard_121021123247\">
-			<File path=".\autoroute_mainboard_121021123247\mainboard_4055-61sa.fsb" Folder="-1" isopened="0"/>
-			</Session>
-			<Session name="mainboard" date="2012-10-21 12:44:38" path=".\autoroute_mainboard_121021124438\">
-			<File path=".\autoroute_mainboard_121021124438\mainboard_4061-42sa.fsb" Folder="-1" isopened="0"/>
-			</Session>
-			<Session name="mainboard" date="2012-10-21 22:05:16" path=".\autoroute_mainboard_121021220516\">
-			<File path=".\autoroute_mainboard_121021220516\mainboard_4091-62sa.fsb" Folder="-1" isopened="0"/>
-			</Session>
-			<Session name="mainboard" date="2012-10-21 22:14:12" path=".\autoroute_mainboard_121021221412\">
-			<File path=".\autoroute_mainboard_121021221412\mainboard_4548-57sa.fsb" Folder="-1" isopened="0"/>
-			</Session>
-			<Session name="mainboard" date="2012-10-21 22:27:12" path=".\autoroute_mainboard_121021222712\">
-			<File path=".\autoroute_mainboard_121021222712\mainboard_4444-61sa.fsb" Folder="-1" isopened="0"/>
-			</Session>
-			<Session name="mainboard" date="2012-10-22 15:04:53" path=".\autoroute_mainboard_121022150453\">
-			<File path=".\autoroute_mainboard_121022150453\mainboard_4465-70sa.fsb" Folder="-1" isopened="0"/>
-			</Session>
-			<Session name="mainboard" date="2012-10-22 15:25:52" path=".\autoroute_mainboard_121022152552\">
-			<File path=".\autoroute_mainboard_121022152552\mainboard_4621-118sa.fsb" Folder="-1" isopened="0"/>
-			</Session>
-			<Session name="manual_begin" date="2012-10-22 20:12:38" path=".\autoroute_manual_begin_121022201238\">
-			<File path=".\autoroute_manual_begin_121022201238\manual_begin_4362-45sa.fsb" Folder="-1" isopened="0"/>
-			</Session>
 		</ARouteSessions>
 	</Document>
 </Project>
