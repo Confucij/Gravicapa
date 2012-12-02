@@ -14,7 +14,7 @@ DEBUG=-Os
 
 STDPL_FLAGS= -DHSE_VALUE=8000000 -DSTM32F10X_MD_VL
 
-CCFLAGS=$(DEBUG) $(STDPL_FLAGS) -mlittle-endian -mthumb -ffreestanding # -ffunction-sections -fdata-sections
+CCFLAGS=$(DEBUG) $(STDPL_FLAGS) -mlittle-endian -mthumb -ffreestanding -std=gnu99 # -ffunction-sections -fdata-sections
 
 
 INCLUDE=-I./libs_stm/inc/base 
