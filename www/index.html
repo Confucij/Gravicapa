@@ -1,0 +1,194 @@
+<!DOCTYPE html> 
+
+<html> 
+    <head> 
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" href="css/style.css" type="text/css" />
+        <link href="css/jquery-ui.css" rel="stylesheet" type="text/css"/>
+        <link href="css/jquery-ui-timepicker-addon.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="css/graph.css">
+
+        <script type="text/javascript" src="js/jquery-1.8.2.js"></script>
+
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+
+        <script type="text/javascript" src="js/jquery.imagecube.js"></script>
+        <script type="text/javascript" src="js/jquery-ui.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
+        <script type="text/javascript" src="js/svechka.js"></script>
+
+        <script type="text/javascript" src="js/myajax.js"></script>
+
+        <style type="text/css">
+            #roof { width: 1016px; height: 186px; }
+            #floor9 { width: 1016px; height: 116px; }
+            #floor8 { width: 1016px; height: 116px; }
+            #floor7 { width: 1016px; height: 116px; }
+            #floor6 { width: 1016px; height: 116px; }
+
+        </style>
+
+
+        <script type="text/javascript">
+            
+            var flag=1;
+            var divid;
+            var inheightdiv_flag=1;
+            var outheightdiv_flag=1;
+            var rotate_cube_flag=1;
+            $(function () {
+                $('#roof').imagecube({imagePath: 'img/', shading: false,repeat: false,direction: 'up',speed : 1000,afterRotate: endedRotate});
+                $('#floor9').imagecube({imagePath: 'img/', shading: false,repeat: false,direction: 'up',speed : 1000,afterRotate: endedRotate});
+                $('#floor8').imagecube({imagePath: 'img/', shading: false,repeat: false,direction: 'up',speed : 1000,afterRotate: endedRotate});
+                $('#floor7').imagecube({imagePath: 'img/', shading: false,repeat: false,direction: 'up',speed : 1000,afterRotate: endedRotate});
+                $('#floor6').imagecube({imagePath: 'img/', shading: false,repeat: false,direction: 'up',speed : 1000,afterRotate: endedRotate});
+                $("#sensor_statistic").hide();     
+                $("#authorization").hide(); 
+                $("#setings_sensors").hide();
+                checkuser();
+                
+            });
+
+
+            function new_sensors_open(){
+                enterNewSensors_flag=1;
+                $("#new_sensors").dialog({
+                    show: 'blind',
+                    hide: 'explode',
+                    height: 135,
+                    position: "top",
+                    width: 430 ,
+                    zIndex: 10,
+                    close : function() {
+                        set_settings_sensor_cancel();
+                        enterNewSensors_flag=0;
+                    },
+                    dragStart : function() {
+                        set_settings_sensor_cancel();
+                    },
+                    resizeStart : function() {
+                        set_settings_sensor_cancel();
+                    }              
+                });
+                get_new_sensors();
+            };
+            
+              
+            function authorization_form_open(){
+                
+                $("#authorization").dialog({
+                    show: 'blind',
+                    hide: 'explode',
+                    position: "center",
+                    resizable: false
+                });               
+            }
+            
+            function authorization_form_close(){
+                $('#authorization').dialog("close");           
+                document.getElementById("errorloginmes").style.display="none";                
+            }
+            
+            function get_statistic(id){
+                $("#sensor_statistic").dialog({
+                    show: 'blind',
+                    hide: 'explode',
+                    height: 600,
+                    width: 700,
+                    position: "center",
+                    close : function() {
+                        get_history_doors_falg=0;
+                        $( "#st_date_door" ).datepicker( "destroy" );
+                        $( "#fi_date_door" ).datepicker( "destroy" );
+                    }
+                });
+                get_desription_call(id);
+            }
+            
+           
+    
+
+        </script>       
+
+    </head> 
+
+    <body class="body"> 
+        <table border="0px">
+            <tr>
+                <td style="display: block; ">
+                    <!--#include file="menu.html"-->
+                </td>
+                <td style="width: 1016px;">
+                    <div align="left">
+                        <div id="roof"  class="" > 
+                            <img style="height: 240px;" src="img/head.png" alt="wait please..."/>                     
+                        </div>
+                        <div id="floor9" >  
+                            <img style="height: 100px; margin-top: -1px;" src="img/etag1.png" alt="wait please..." onclick="rotate_cube('floor9',null)"/> 
+                            <div style="height: 100px;">
+                                <a name="floor9_pos"></a>
+                                <!--#include file="floor9.html"-->
+                            </div>                
+                        </div>        
+                        <div id="floor8" >  
+                            <img style="height: 100px; margin-top: -1px;" src="img/etag1.png" alt="wait please..." onclick="rotate_cube('floor8',null)"/>  
+                            <div style="height: 100px;">
+                                <a name="floor8_pos"></a>
+                                <!--#include file="floor8.html"-->
+                            </div>
+                        </div>
+                        <div id="floor7">  
+                            <img style="height: 100px; margin-top: -1px;" src="img/etag1.png" alt="wait please..." onclick="rotate_cube('floor7',null)"/>
+                            <div style="height: 100px;">
+                                <a name="floor7_pos"></a>                    
+                                <!--#include file="floor7.html"-->                    
+                            </div>
+                        </div>
+                        <div id="floor6" >  
+                            <img style="height: 100px; margin-top: -1px;" src="img/etag1.png" alt="wait please..." onclick="rotate_cube('floor6',null)"/>  
+                            <div> 
+                                <a name="floor6_pos"></a>  
+                                <!--#include file="floor6.html"-->  
+                            </div>   
+                        </div>
+                    </div>
+                </td>
+                <td>
+                </td>
+            </tr>
+        </table>   
+
+        <div id="new_sensors" title="Новые датчики"  style="font-size: 12; padding: 0px;"> 
+            <div id="new_sensors_content" style="font-size: 12; width: 100%; height:  100%;">
+            </div>            
+        </div>
+        <!--#include file="setauditory.html"-->
+
+        <div id="sensor_statistic" title="Статистика"  style="font-size: 12; padding: 0px;"> 
+            <p>
+                <!--#include file="graficks.html"-->
+            </p>
+        </div>
+
+        <div id="authorization" title="Авторизация"  style="font-size: 12; padding: 0px;">
+            Логин: <br />
+            <input id="login" type="text" name="login" size="25" maxlength="30" value="" /> <br />
+            Пароль: <br />
+            <script>
+                function kppass(env){
+                    if(env.keyCode == 13){
+                        authorization_start() 
+                    }
+                }
+            </script>
+
+            <input id="pass" type="password" name="pass" size="25" maxlength="30" value="" onkeypress="kppass(event)"/> <br />
+            <a id="errorloginmes" style="background-color: red; display: none;"> Не правельный логин или пароль! </a> <br />
+            <input type="button" value="Вход" onclick="authorization_start()"/>
+            <input type="button" value="Отмена" onclick="authorization_form_close()"/>           
+        </div>
+
+
+    </body>
+
+</html> 

@@ -1,0 +1,58 @@
+
+<html>
+<head>
+    <title>Page</title>
+     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+     <script type="text/javascript">
+         
+            var xmlHttp=getXmlHttp();
+            
+            function getXmlHttp(){
+            var xmlhttp;
+            try {
+                xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+            } catch (e) {
+                try {
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                } catch (E) {
+                xmlhttp = false;
+                }
+            }
+            if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
+                xmlhttp = new XMLHttpRequest();
+            }
+            return xmlhttp;
+            }
+            
+            function callServer() {
+                var login = document.getElementById("login").value;
+                var url = "cgi-bin/test.pl?login=" + escape(login);
+                xmlHttp.open("GET", url, true);
+                xmlHttp.onreadystatechange = updatePage;
+                xmlHttp.send(null);
+           }
+            
+           function updatePage() {
+                if (xmlHttp.readyState == 4) {
+                    var response = xmlHttp.responseText;
+                    document.getElementById("result").textContent = response;
+                    //setTimeout("callServer()",  3000);                    
+                }
+          }
+            
+            
+            
+            
+   </script>
+
+</head>
+
+<body>
+
+
+
+
+
+    
+</body>
+</html>

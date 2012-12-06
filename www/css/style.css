@@ -1,0 +1,44 @@
+.body {
+    margin: 0px;
+    padding:  0px;
+    border: 0px;
+    background-color: white;
+}
+
+.sensors {
+    display: block;
+    margin: 0px;
+    padding:  0px;
+    border: 0px;
+}
+
+.sensors:hover {
+    background-color: darkgray;
+}
+
+.sensorstable {
+    margin: 0px;
+    padding:  0px;
+    border: 0px;
+}
+
+.sensorstable:hover {
+    background-color: darkgray;
+}
+
+.menuclass{
+    background-image: url("../img/menu.jpg"); 
+    width: 168px;
+    height: 117px;
+}
+
+.herfmenu{
+    position: relative; 
+    top: 40px; 
+    text-decoration: none;
+    color: black;
+}
+
+.dialogclass{
+    
+}

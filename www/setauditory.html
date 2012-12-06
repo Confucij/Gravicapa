@@ -1,0 +1,60 @@
+<div id="setsendial" style="font-size: 12px; background-image: url('img/shareit.png'); width:138px; height: 100px;">
+    <div id="setsendial_div1" style="padding-top: 20px;" align="center">
+        Аудитория <br/> <input id="setsendial_input" class="onlyDigits" value="" type="text" maxlength="5" style="width:40px;"/> 
+        <a id="setsendial_id" style="display: none"> </a>
+    </div>
+    <div id="setsendial_div2" align="center">
+        <button value="ok" onclick="set_settings_sensor_ok()">ok</button>
+        <button value="cancel" onclick="set_settings_sensor_cancel()">cancel</button>
+    </div>
+</div>
+
+<script>
+            
+    function setsendial_open(event,id) {
+        document.getElementById("setsendial_id").value=id;
+        $("#setsendial_input").val("");
+        $( "#setsendial" ).hide();
+        var setap=document.getElementById("setsendial");
+        setap.style.position="absolute";
+        setap.style.left=parseInt(event.pageX-69)+"px";
+        setap.style.top=parseInt(event.pageY+10)+"px"
+        event.stopPropagation();
+        $(document).click(function(e){
+            var targetElementId = e.target.id;
+            if ((targetElementId==null) || (targetElementId=="")){
+                $(document).unbind('click', arguments.callee);
+                $( "#setsendial" ).hide();
+                return;
+            }
+            var parent=document.getElementById(targetElementId).parentNode;
+            var idtargetparent=parent.parentNode.id;
+            var indent='setsendial';
+            if ((targetElementId==indent) || (idtargetparent==indent) || (parent.id==indent))//TODO
+            {
+                return;                   
+            }else{                       
+                $(document).unbind('click', arguments.callee);
+                $( "#setsendial" ).hide(1000); 
+            }
+        }
+    );
+        $( "#setsendial" ).show('slow');
+        $( "#setsendial" ).zIndex(3000);  
+    }           
+
+     
+    function  set_settings_sensor_cancel(){
+        $( "#setsendial" ).hide(1000);
+        $(document).unbind('click', arguments.callee);                    
+    }
+            
+    function  set_settings_sensor_ok(){
+        set_auditory();
+        $( "#setsendial" ).hide(500);
+        $(document).unbind('click', arguments.callee);                    
+    }
+            
+    $( "#setsendial" ).hide();
+            
+</script>

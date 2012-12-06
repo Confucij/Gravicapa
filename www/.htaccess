@@ -1,0 +1,7 @@
+DirectoryIndex index.php index.shtml index.html
+Options Indexes Includes
+
+AddType text/html .shtml
+AddHandler server-parsed .shtml .html .htm
+AddOutputFilter INCLUDES .shtml .html .htm
+Options +ExecCGI

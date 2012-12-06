@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+
+
+
+<html lang="en">
+
+    <head>
+        <script src="js/jquery.min.js"></script>
+        <script src="js/jquery.flot.min.js"></script>
+        <script src="js/graphicks.js"></script>
+        <meta charset="utf-8">	
+        <link rel="stylesheet" href="css/graph.css">
+    </head>
+
+    <body>
+
+        <!-- Graph HTML -->
+        <div id="graph-wrapper">
+            <div class="graph-info">
+                <a href="javascript:void(0)" class="visitors">Температура</a>
+
+                <a href="#" id="bars"><span></span></a>
+                <a href="#" id="lines" class="active"><span></span></a>
+            </div>
+
+            <div class="graph-container">
+                <div id="graph-lines"></div>
+                <div id="graph-bars"></div>
+            </div>
+        </div>
+        <!-- end Graph HTML -->
+        <script>
+
+            function getXmlHttp(){
+                var xmlhttp;
+                try {
+                    xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+                } catch (e) {
+                    try {
+                        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                    } catch (E) {
+                        xmlhttp = false;
+                    }
+                }
+                if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
+                    xmlhttp = new XMLHttpRequest();
+                }
+                return xmlhttp;
+            }
+
+            var debug_httpXML=getXmlHttp();
+
+            function debug_function(){
+                var url = "cgi-bin/web-app/debuggr.pl";
+                debug_httpXML.open("POST", url, false);
+                debug_httpXML.send(null); 
+               
+                var son=JSON.parse(debug_httpXML.responseText.toString());
+               
+                document.getElementById('debug').innerHTML=graphData[0].data;
+                graphData[0].data=son.data;
+                document.getElementById('debug').innerHTML=document.getElementById('debug').innerHTML+"\n";
+                document.getElementById('debug').innerHTML=document.getElementById('debug').innerHTML+graphData[0].data;
+                repaint_graph(graphData);
+            }
+
+            $(function () {
+                
+            //  repaint_graph(graphData);
+                
+            });
+
+        </script>
+        <button onclick=" debug_function()"></button>
+        <div id="debug">
+        </div>
+
+
+
+
+    </body>
+
+</html>

@@ -1,0 +1,234 @@
+
+
+
+<!-- Graph HTML -->
+
+
+
+<script>
+    
+    var wait_input_desription="Пагади немного, сервера ответ жду я ...";
+    
+    
+    var get_history_doors_falg=0;
+    var get_desription_xmlHttp=getXmlHttp();
+    var get_history_doors_xmlHttp=getXmlHttp();
+    function onlyDigits() {
+        this.value = this.value.replace(/[^\d]/g, "");
+    }
+    
+    function clearkey() {
+        this.value = "";
+    }
+    
+    function get_desription_call(id){
+        document.getElementById('graphid').value=id;
+        document.getElementById('graph_bu').disabled=true;
+        document.getElementById('opisanie_statistic').value=wait_input_desription;
+        document.getElementById('opisanie_statistic').disabled=true;
+        document.getElementById('auditory_statistic').disabled=true;
+        document.getElementById('type_statistic').disabled=true;
+        var url = "cgi-bin/site_lib/get_desription.pl?id="+id;
+        // РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р… РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р… РїС—Р… РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…
+        get_desription_xmlHttp.open("GET", url, true);
+        get_desription_xmlHttp.onreadystatechange = get_desription_response;
+        // SРїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р… РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…
+        get_desription_xmlHttp.send(null);       
+        document.getElementById('Graph').style.display="none";
+        document.getElementById('History_doors_div').style.display="none";
+        document.getElementById("auditory_statistic").onkeyup = onlyDigits;
+        document.getElementById("st_date_door").onkeyup = clearkey;        
+        $( "#st_date_door" ).datepicker( "destroy" );
+        $( "#fi_date_door" ).datepicker( "destroy" );
+        document.getElementById('st_date_door').value="";
+        document.getElementById("fi_date_door").onkeyup = clearkey;
+        document.getElementById('fi_date_door').value="";  
+        
+    }
+    
+
+    function get_desription_response(){
+        if (get_desription_xmlHttp.readyState == 4) {
+            var response = get_desription_xmlHttp.responseText;
+            document.getElementById('graph_bu').disabled=false;
+            var posdes=response.toString().indexOf("&1");            
+            document.getElementById('opisanie_statistic').value=response.toString().substr(0,posdes);
+            var posaud=response.toString().indexOf("&2");            
+            document.getElementById('auditory_statistic').value=response.toString().substr(posdes+2,posaud-(posdes+2));
+            var postype=response.toString().indexOf("&3");    
+            var type=response.toString().substr(posaud+2,postype-(posaud+2));
+            document.getElementById('type_statistic').value=type;
+            
+            document.getElementById('opisanie_statistic').disabled=false;
+            document.getElementById('auditory_statistic').disabled=false;
+            document.getElementById('type_statistic').disabled=false;
+            
+            document.getElementById('Graph').style.display="none";
+            document.getElementById('History_doors_div').style.display="none";
+            if (type=="T"){                
+                document.getElementById('Graph').style.display="block";
+                data_graphick_HTTP_fu();
+            }
+            if (type=="D"){                
+                document.getElementById('History_doors_div').style.display="block";    
+                if (get_history_doors_falg==0){
+                    get_history_doors_falg=1;
+                    get_history_doors();
+                }
+            }
+        }
+    }
+    
+    
+    function get_history_doors(){
+        var url = "cgi-bin/site_lib/get_history_doors.pl?id="+document.getElementById('graphid').value;
+        get_history_doors_xmlHttp.open("GET", url, false);
+        get_history_doors_xmlHttp.send(null); 
+        document.getElementById('History_doors').innerHTML=get_history_doors_xmlHttp.responseText;
+        if (get_history_doors_falg==1){
+            //            setTimeout("get_history_doors()",  10000);  
+        }
+    }
+    
+    function find_history_doors(){
+        var url = "cgi-bin/site_lib/find_history_doors.pl?id="+document.getElementById('graphid').value
+            +"&st="+document.getElementById('st_date_door').value
+            +"&fi="+document.getElementById('fi_date_door').value;
+        get_history_doors_xmlHttp.open("GET", url, false);
+        get_history_doors_xmlHttp.send(null); 
+        document.getElementById('History_doors').innerHTML=get_history_doors_xmlHttp.responseText;
+    }
+    
+    function change_desription_call(){
+        document.getElementById('graph_bu').disabled=true;
+        document.getElementById('opisanie_statistic').disabled=true;
+        var url = "cgi-bin/site_lib/change_desription.pl?"
+            +"id="+document.getElementById('graphid').value
+            +"&desription="+document.getElementById('opisanie_statistic').value
+            +"&auditory="+document.getElementById('auditory_statistic').value
+            +"&type="+document.getElementById('type_statistic').value
+        ;
+        // РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р… РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р… РїС—Р… РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…
+        document.getElementById('opisanie_statistic').value=wait_input_desription;
+        get_desription_xmlHttp.open("GET", url, true);
+        get_desription_xmlHttp.onreadystatechange = get_desription_response;
+        // SРїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р… РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…
+        get_desription_xmlHttp.send(null); 
+        document.getElementById('opisanie_statistic').disabled=true;
+        document.getElementById('auditory_statistic').disabled=true;
+        document.getElementById('type_statistic').disabled=true;
+    }
+    document.querySelector(".onlyDigits").onkeyup = onlyDigits;
+    
+    
+    
+    function getXmlHttp(){
+        var xmlhttp;
+        try {
+            xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+        } catch (e) {
+            try {
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (E) {
+                xmlhttp = false;
+            }
+        }
+        if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
+            xmlhttp = new XMLHttpRequest();
+        }
+        return xmlhttp;
+    }
+
+    var data_graphick_HTTP=getXmlHttp();
+
+    function data_graphick_HTTP_fu(){
+        var url = "cgi-bin/web-app/debuggr.pl";
+        data_graphick_HTTP.open("GET", url, true);
+        data_graphick_HTTP.onreadystatechange = repaint_redy_my;
+        data_graphick_HTTP.send(null);                
+               
+    }
+    
+    
+    function repaint_redy_my() {
+        if (data_graphick_HTTP.readyState == 4) {
+            var son=JSON.parse(data_graphick_HTTP.responseText.toString());    
+            graphData[0].data=son.data;          
+            repaint_graph(graphData);
+        }
+    }
+    
+</script>
+
+
+<div id="graph-wrapper" align="center">
+    <div id="sensor_settings_menu" align="left" style="margin-left: 50px;">
+        <input  id="graphid"  type="text" style="display: none;" value="" /> 
+        <table border="0px">
+            <tr>
+                <td>
+                    <a>Описание</a>
+                </td>
+                <td colspan="2">
+                    <input id="opisanie_statistic" style="width: 400px;" type="text" value="Пагади немного, сервера ответ жду я ..."/>
+                </td >
+                <td rowspan="2">
+                    <button id="graph_bu" value="" onclick="change_desription_call();">Изменить</button>
+                <td>
+            </tr>
+            <tr>
+                <td>
+                    <a>Аудитория</a>
+                </td>
+                <td >
+                    <input id="auditory_statistic" maxlength="4" style="width: 60px;" type="text" value=""/>
+                </td >
+
+                <td align="right">
+                    <a>Тип датчика</a>
+
+                    <select id="type_statistic">
+                        <option value="T">Температура</option>
+                        <option value="D">Дверь</option>
+                    </select>
+                </td >
+            </tr>
+        </table>
+    </div>
+
+    </br>    
+    <div id="Graph">
+        <fieldset>
+            <a name="drapfh"></a>   
+            <div class="graph-info">
+                <a id="nameX" href="javascript:void(0)" class="visitors"> Данные </a>
+                <a id="nameY" style="display: none;" href="javascript:void(0)" class="returning">  </a>
+
+                <a  id="bars" onclick="barsclick()"><span></span></a>
+                <a  id="lines" class="active" onclick="linesclick()"><span></span></a>
+            </div>
+            <div class="graph-container">
+                <div id="graph-lines" ></div>
+                <div id="graph-bars"></div>
+            </div>
+        </fieldset>
+    </div>
+    <div id="History_doors_div" style="width: 100%; height: 100%;" >
+        <fieldset>
+            <div>   
+                Дата от <input id="st_date_door" value="" onmousemove='$( "#st_date_door" ).datetimepicker({dateFormat : "yy-mm-dd"});' type="datetime" > 
+                до <input id="fi_date_door" value="" onmousemove='$( "#fi_date_door" ).datetimepicker({dateFormat : "yy-mm-dd"});' type="datetime" >
+                <button onclick="find_history_doors()">Найти</button>
+            </div>
+
+            <fieldset style="margin-top: 5px;">
+                <div id="History_doors" style="height: 100%; width: 100%; max-height: 340px; overflow : auto;">
+
+                </div>
+            </fieldset>
+        </fieldset>
+    </div>
+</div>
+<!-- end Graph HTML -->
+<script type="text/javascript"  src="js/jquery.flot.min.js"></script>
+<script type="text/javascript" src="js/graphicks.js"></script>

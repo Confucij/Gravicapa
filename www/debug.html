@@ -1,0 +1,26 @@
+
+<script>
+
+
+
+    var debug_httpXML=getXmlHttp();
+
+    function debug_function(){
+        var url = "cgi-bin/web-app/debug.pl?id=3";
+        debug_httpXML.open("GET", url, false);
+        debug_httpXML.send(null); 
+        document.getElementById('debug').innerHTML=debug_httpXML.responseText;
+    }
+
+    $(function () {
+                
+        debug_function();
+                
+    });
+
+</script>
+<div id="debug">
+</div>
+
+
+
