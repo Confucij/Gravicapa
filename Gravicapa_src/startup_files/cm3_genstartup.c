@@ -242,7 +242,7 @@ void *other_vector_table[] __attribute__ ((section(".vectors.other"))) = {
 0,
 0,
 0,
-TIM6_DAC_IRQHandler, //TIM6
+0,//TIM6_DAC_IRQHandler, //TIM6
 0,
 0, 
 0,

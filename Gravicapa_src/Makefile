@@ -8,13 +8,13 @@ OBJSIZE=arm-none-eabi-size
 
 
 #Debug mode
-DEBUG=-g
+#DEBUG=-g
 #Release mode
-#DEBUG=-O2
+DEBUG=-Os
 
 STDPL_FLAGS= -DHSE_VALUE=8000000 -DSTM32F10X_MD_VL
 
-CCFLAGS=$(DEBUG) $(STDPL_FLAGS) -mlittle-endian -mthumb -ffreestanding -nostdlib 
+CCFLAGS=$(DEBUG) $(STDPL_FLAGS) -mlittle-endian -mthumb -ffreestanding -std=gnu99 # -ffunction-sections -fdata-sections
 
 
 INCLUDE=-I./libs_stm/inc/base 
@@ -24,17 +24,20 @@ INCLUDE+=-I./include
 INCLUDE+=-I./libs_stm/inc/stm32f10x 
 INCLUDE+=-I./include/sd
 INCLUDE+=-I./include/onewire
+INCLUDE+=-I./include/os
 
 
 LDSCRIPT=stm32f100xb_flash.ld
 LDFLAGS=-L./startup_files
 LDFLAGS+=-Wl,-T,$(LDSCRIPT)
+#LDFLAGS+=-Wl,--gc-sections
 
 CCFLAGS+=-mcpu=cortex-m3
 
-SRCDIR=./src 
+SRCDIR=./src
+SRCDIR+=./src/os
 SRCDIR+=./src/sd
-SRCDIR+=./src/onewire
+#SRCDIR+=./src/onewire
 SRCDIR+=./src/hal
 SRC=./startup_files/cm3_genstartup.c 
 SRC+=$(wildcard $(addsuffix /*.c, $(SRCDIR)))
@@ -44,7 +47,7 @@ all: $(APP).bin
 %.bin: %.elf
 	$(OBJCOPY) -O binary $^ $@
 
-$(APP).elf: $(SRC)
+$(APP).elf: $(SRC) 
 	$(CC) $(CCFLAGS) $(INCLUDE) $(LDFLAGS) $^ -o $@
 
 clean:
