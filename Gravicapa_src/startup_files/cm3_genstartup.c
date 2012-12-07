@@ -15,6 +15,7 @@
  * @return 
  */
 #include "stm32f10x.h"
+#include "misc.h"
 //TODO Почему-то не видело объявления в "stm32f10x.h" скопипастил сюда. Костыль. Поправить. Ага, поправить. Так оно тут и будет.
 #define  RCC_CFGR_PLLSRC_HSE                ((uint32_t)0x00010000)        /*!< HSE clock selected as PLL entry clock source */
 extern int main(void);
@@ -146,27 +147,13 @@ if ( (RCC->CR & RCC_CR_HSERDY) != RESET)
   	}
 }
 
-void __attribute__((noreturn, naked)) Reset_Handler() {
-    unsigned long *src;
-    unsigned long *dest;
-    
-    src = &__text_end;
-    dest = &__data_start;
-    if (src != dest)
-        while(dest < &__data_end)
-            *(dest++) = *(src++);
- 
-    dest = &__bss_start;
-    while(dest < &__bss_end)
-        *(dest++) = 0;
-	SystemInit();
-	main();
-}
 
 /**
  * This table contains the core Coretex vectors, and should be linked first.
  * You should link any chip specific tables after this.
  */
+
+
 void *vector_table[] __attribute__ ((section(".vectors"))) = {
 	&_estack,
 	Reset_Handler,
@@ -183,8 +170,27 @@ void *vector_table[] __attribute__ ((section(".vectors"))) = {
 	DebugMon_Handler,
 	0,
 	PendSV_Handler,
-	SysTick_Handler,
+	SysTick_Handler
 };
+
+
+void __attribute__((noreturn, naked)) Reset_Handler() {
+    unsigned long *src;
+    unsigned long *dest;
+    
+    src = &__text_end;
+    dest = &__data_start;
+    if (src != dest)
+        while(dest < &__data_end)
+            *(dest++) = *(src++);
+ 
+    dest = &__bss_start;
+    while(dest < &__bss_end)
+        *(dest++) = 0;
+    NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0);
+	SystemInit();
+	main();
+}
 
 
 void *other_vector_table[] __attribute__ ((section(".vectors.other"))) = {
@@ -247,5 +253,5 @@ void *other_vector_table[] __attribute__ ((section(".vectors.other"))) = {
 0, 
 0,
 0,
-0,
+0
 };

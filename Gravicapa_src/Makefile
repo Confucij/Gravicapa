@@ -10,7 +10,7 @@ OBJSIZE=arm-none-eabi-size
 #Debug mode
 #DEBUG=-g
 #Release mode
-DEBUG=-Os
+DEBUG= -g
 
 STDPL_FLAGS= -DHSE_VALUE=8000000 -DSTM32F10X_MD_VL
 
