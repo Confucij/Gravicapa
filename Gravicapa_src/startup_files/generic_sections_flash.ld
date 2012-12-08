@@ -15,7 +15,7 @@ SECTIONS
     .text :
     {
         *(.vectors)   /* Vector table */
-        *(.vectors.other) /* Any extra device vectors */
+        *(.vectors.*) /* Any extra device vectors */
         *(.text)      /* Program code */
         *(.rodata)    /* Read only data */
         *(.rodata*)

@@ -175,7 +175,25 @@ void enc28j60_write_phy(uint8_t adr, uint16_t data)
 		;
 }
 
+void enc28j60_init_interrupt(){
+    RCC->APB2ENR |= RCC_APB2ENR_AFIOEN;
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
 
+    GPIO_InitTypeDef GPIO_InitStruct;
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_4;
+    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
+
+    GPIO_Init(GPIOB, &GPIO_InitStruct);
+    EXTI->FTSR |= EXTI_FTSR_TR4;
+    EXTI->IMR |= EXTI_IMR_MR4;
+    EXTI->EMR |= EXTI_EMR_MR4;
+    AFIO->EXTICR[1] |=  AFIO_EXTICR2_EXTI4_PB;
+    NVIC_EnableIRQ(EXTI4_IRQn);
+    enc28j60_wcr(EIE,EIE_INTIE|EIE_PKTIE);
+    __enable_irq();
+
+}
 /*
  * Init & packet Rx/Tx
  */
@@ -268,6 +286,7 @@ void enc28j60_init(uint8_t *macadr)
 
 	// Enable Rx packets
 	enc28j60_bfs(ECON1, ECON1_RXEN);
+    enc28j60_init_interrupt();
 }
 
 void enc28j60_send_packet(uint8_t *data, uint16_t len)

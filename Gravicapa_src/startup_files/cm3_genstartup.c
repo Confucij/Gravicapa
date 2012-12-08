@@ -46,7 +46,7 @@ void DebugMon_Handler(void) __attribute__ ((weak, alias ("Dummy_Handler")));
 void PendSV_Handler(void) __attribute__ ((weak, alias ("Dummy_Handler")));
 void SysTick_Handler(void) __attribute__ ((weak, alias ("Dummy_Handler")));
 extern void TIM6_DAC_IRQHandler();
-
+extern void EXTI4_handler();
 /**
  * The chip specific (STM32L1xx or F1, or LPC, or TI etc) vectors are in a 
  * chip specific file.  by placing them in a subsection, they can be linked in
@@ -170,7 +170,7 @@ void *vector_table[] __attribute__ ((section(".vectors"))) = {
 	DebugMon_Handler,
 	0,
 	PendSV_Handler,
-	SysTick_Handler
+	SysTick_Handler,
 };
 
 
@@ -204,7 +204,7 @@ void *other_vector_table[] __attribute__ ((section(".vectors.other"))) = {
 0,
 0,
 0,
-0,
+EXTI4_handler,
 0,
 0,
 0,
@@ -253,5 +253,5 @@ void *other_vector_table[] __attribute__ ((section(".vectors.other"))) = {
 0, 
 0,
 0,
-0
+0,
 };
