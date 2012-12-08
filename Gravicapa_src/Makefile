@@ -39,7 +39,7 @@ SRCDIR+=./src/os
 SRCDIR+=./src/sd
 #SRCDIR+=./src/onewire
 SRCDIR+=./src/hal
-#SRCDIR+=./src/uIP
+SRCDIR+=./src/uIP
 SRC=./startup_files/cm3_genstartup.c 
 SRC+=$(wildcard $(addsuffix /*.c, $(SRCDIR)))
 
