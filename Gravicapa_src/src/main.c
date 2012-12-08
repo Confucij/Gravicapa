@@ -13,7 +13,9 @@
 
 
 xQueueHandle message_q;
+
 char uip_buf[256];
+uint8_t tmp;
 
 void EXTI4_handler(){
     uint8_t temp=1;
@@ -22,21 +24,29 @@ void EXTI4_handler(){
     EXTI->PR |= EXTI_PR_PR4;
 }
 
+void vTask_uIP_periodic(void *pvParameters) {
+    for(;;){
+
+        vTaskDelay(configTICK_RATE_HZ/5); 
+    }
+
+}
+
 void vTask_uIP(void *pvParameters) {
-    volatile uint32_t st;
     uint16_t uip_len=0;
 
     for (;;) {
-        uint8_t tmp;
-        xQueueReceive(message_q,&tmp,portMAX_DELAY);
-        if ( uip_len = enc28j60_recv_packet((uint8_t *) uip_buf, sizeof(uip_buf))) {
-            enc28j60_send_packet((uint8_t *) uip_buf, uip_len);
-        }
+        // vTaskDelay(configTICK_RATE_HZ/10); 
+          xQueueReceive(message_q,&tmp,portMAX_DELAY);
+          tmp++;
+          if ( uip_len = enc28j60_recv_packet((uint8_t *) uip_buf, sizeof(uip_buf))) {
+              enc28j60_send_packet((uint8_t *) uip_buf, uip_len);
+          }
     }
 }
 
 void init_structs(){
-message_q = xQueueCreate(10,sizeof(uint8_t));
+    message_q = xQueueCreate(10,sizeof(uint8_t));
 
 }
 
@@ -44,10 +54,12 @@ message_q = xQueueCreate(10,sizeof(uint8_t));
 void main(void)
 {
 
-    
+
     char mac[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x00 };
-   	enc28j60_init(mac);
-    
+    enc28j60_init(mac);
+    xTaskCreate( vTask_uIP_periodic, ( signed char * ) "uIPp",
+            configMINIMAL_STACK_SIZE*2, NULL, 1, ( xTaskHandle * ) NULL);
+
 	xTaskCreate( vTask_uIP, ( signed char * ) "uIP",
 			configMINIMAL_STACK_SIZE*2, NULL, 2, ( xTaskHandle * ) NULL);
     init_structs();

@@ -24,8 +24,8 @@ INCLUDE+=-I./include
 INCLUDE+=-I./libs_stm/inc/stm32f10x 
 INCLUDE+=-I./include/sd
 INCLUDE+=-I./include/onewire
-INCLUDE+=-I./include/os
-
+INCLUDE+=-I./include/os 
+INCLUDE+=-I./include/uIP
 
 LDSCRIPT=stm32f100xb_flash.ld
 LDFLAGS=-L./startup_files
@@ -39,6 +39,7 @@ SRCDIR+=./src/os
 SRCDIR+=./src/sd
 #SRCDIR+=./src/onewire
 SRCDIR+=./src/hal
+#SRCDIR+=./src/uIP
 SRC=./startup_files/cm3_genstartup.c 
 SRC+=$(wildcard $(addsuffix /*.c, $(SRCDIR)))
 
