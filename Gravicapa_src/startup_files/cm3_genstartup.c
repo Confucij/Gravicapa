@@ -187,6 +187,16 @@ void __attribute__((noreturn, naked)) Reset_Handler() {
     dest = &__bss_start;
     while(dest < &__bss_end)
         *(dest++) = 0;
+     static unsigned int fstack;
+     fstack = (unsigned int)vector_table[0];
+  __asm__ __volatile__
+    (
+     "ldr sp, %0\n\t"
+     : 
+     : "m"(fstack)
+     : "sp"
+    );
+
     NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0);
 	SystemInit();
 	main();

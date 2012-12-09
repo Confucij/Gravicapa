@@ -7,6 +7,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
+#include "uip.h"
+#include "uip_arp.h"
 #include <stm32f10x_gpio.h>
 #include <stm32f10x_rcc.h>
 
@@ -14,7 +16,6 @@
 
 xQueueHandle message_q;
 
-char uip_buf[256];
 uint8_t tmp;
 
 void EXTI4_handler(){
@@ -33,15 +34,14 @@ void vTask_uIP_periodic(void *pvParameters) {
 }
 
 void vTask_uIP(void *pvParameters) {
-    uint16_t uip_len=0;
 
     for (;;) {
         // vTaskDelay(configTICK_RATE_HZ/10); 
-          xQueueReceive(message_q,&tmp,portMAX_DELAY);
-          tmp++;
-          if ( uip_len = enc28j60_recv_packet((uint8_t *) uip_buf, sizeof(uip_buf))) {
-              enc28j60_send_packet((uint8_t *) uip_buf, uip_len);
-          }
+        xQueueReceive(message_q,&tmp,portMAX_DELAY);
+        tmp++;
+        if ( uip_len = enc28j60_recv_packet((uint8_t *) uip_buf, sizeof(uip_buf))) {
+            enc28j60_send_packet((uint8_t *) uip_buf, uip_len);
+        }
     }
 }
 
@@ -54,15 +54,38 @@ void init_structs(){
 void main(void)
 {
 
+    init_structs();
+    // это будет наш МАС-адрес
+    struct uip_eth_addr mac = { { 0x00, 0x01, 0x02, 0x03, 0x04, 0x00 } };
 
-    char mac[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x00 };
-    enc28j60_init(mac);
+    // проинитим наш  enc28j60
+    enc28j60_init(mac.addr);
+
+    // инициализация стека
+    uip_init();
+    uip_arp_init();
+
+    // инициализация приложения, потом втулим сюда веб-сервер
+   // hello_world_init();
+
+    // установим наш МАС
+    uip_setethaddr(mac);
+
+    // установим адрес хоста (не используем dhcp)
+    // наш хост будет доступен по адресу 192.168.2.55
+    uip_ipaddr_t ipaddr;
+    uip_ipaddr(ipaddr, 192, 168, 0, 55);
+    uip_sethostaddr(ipaddr);
+    uip_ipaddr(ipaddr, 192, 168, 0, 12);
+    uip_setdraddr(ipaddr);
+    uip_ipaddr(ipaddr, 255, 255, 255, 0);
+    uip_setnetmask(ipaddr);
+
     xTaskCreate( vTask_uIP_periodic, ( signed char * ) "uIPp",
             configMINIMAL_STACK_SIZE*2, NULL, 1, ( xTaskHandle * ) NULL);
 
 	xTaskCreate( vTask_uIP, ( signed char * ) "uIP",
 			configMINIMAL_STACK_SIZE*2, NULL, 2, ( xTaskHandle * ) NULL);
-    init_structs();
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
