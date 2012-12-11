@@ -48,6 +48,11 @@ void lan_appcall(void);
 void lan_init(void);
 
 #define APP_PORT 12345
+#define MAGIC_WORD "B19B00B5"
+#define FUNC_WRONG 0
+#define FUNC_REG 1
+#define FUNC_SETTIME 2
+#define FUNC_GETTIME 3
 
 #endif /* __HELLO_WORLD_H__ */
 /** @} */

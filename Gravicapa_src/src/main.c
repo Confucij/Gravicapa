@@ -1,8 +1,9 @@
 
 
 #include "stm32f10x.h"
+
 #include "enc28j60.h"
-#include "misc.h"
+#include "rtc.h"
 
 #include "FreeRTOSConfig.h"
 #include "FreeRTOS.h"
@@ -15,7 +16,7 @@
 
 #include <stm32f10x_gpio.h>
 #include <stm32f10x_rcc.h>
-
+#include "misc.h"
 
 #define BUF ((struct uip_eth_hdr *)&uip_buf[0])
 xQueueHandle message_q;
@@ -127,6 +128,7 @@ void main(void)
 {
 
     init_structs();
+    rtc_init(); 
 
     xTaskCreate( vTask_uIP_periodic, ( signed char * ) "uIPp",
             configMINIMAL_STACK_SIZE*2, NULL, 1, ( xTaskHandle * ) NULL);
