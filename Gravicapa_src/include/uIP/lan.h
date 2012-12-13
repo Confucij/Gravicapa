@@ -47,6 +47,8 @@ void lan_appcall(void);
 
 void lan_init(void);
 
+#define APP_PORT 12345
+
 #endif /* __HELLO_WORLD_H__ */
 /** @} */
 /** @} */
