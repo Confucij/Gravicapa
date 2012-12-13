@@ -37,7 +37,7 @@ CCFLAGS+=-mcpu=cortex-m3
 SRCDIR=./src
 SRCDIR+=./src/os
 SRCDIR+=./src/sd
-#SRCDIR+=./src/onewire
+SRCDIR+=./src/onewire
 SRCDIR+=./src/hal
 SRCDIR+=./src/uIP
 SRC=./startup_files/cm3_genstartup.c 

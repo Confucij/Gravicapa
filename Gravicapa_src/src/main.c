@@ -9,6 +9,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
+#include "timers.h"
 
 #include "uip.h"
 #include "uip_arp.h"
@@ -18,10 +19,18 @@
 #include <stm32f10x_rcc.h>
 #include "misc.h"
 
+#include "onewire.h"
+#include "sensors.h"
 #define BUF ((struct uip_eth_hdr *)&uip_buf[0])
 xQueueHandle message_q;
+xQueueHandle new_data;
 /*Server addres*/
 extern uip_ipaddr_t* server_addr;
+
+
+uint16_t c_state,p_state;
+
+sensor term,door;
 
 uint8_t tmp;
 
@@ -32,8 +41,12 @@ void EXTI4_handler(){
     EXTI->PR |= EXTI_PR_PR4;
 }
 
+void EXTI5_9_handler(){
+   door.value ^= 1; 
+
+}
+
 void vTask_uIP_periodic(void *pvParameters) {
-    for(;;){
 
         uint32_t i;
         uint8_t delay_arp = 0;
@@ -65,7 +78,6 @@ void vTask_uIP_periodic(void *pvParameters) {
             }
         }
 
-    }
 
 }
 
@@ -101,7 +113,7 @@ void vTask_uIP(void *pvParameters) {
     lan_init();
     for (;;) {
         // vTaskDelay(configTICK_RATE_HZ/10); 
-        xQueueReceive(message_q,&tmp,portMAX_DELAY);
+        xQueueReceive(message_q,&tmp,configTICK_RATE_HZ*3);
         while ( uip_len = enc28j60_recv_packet((uint8_t *) uip_buf, sizeof(uip_buf))) {
             if (BUF->type == htons(UIP_ETHTYPE_IP)) {
                 uip_arp_ipin();
@@ -124,17 +136,42 @@ void vTask_uIP(void *pvParameters) {
 void vTask_check_data(void* param){
     
     /*if we dont know where server is*/
-    if(server_addr==NULL){
-        return 1;
+//    if(server_addr==NULL){
+//        return 1;
+//    }
+for(;;){
+    taskENTER_CRITICAL();
+    ds_start_convert_single(10);
+    taskEXIT_CRITICAL();
+    vTaskDelay(configTICK_RATE_HZ*5);
+    taskENTER_CRITICAL();
+    term.value = ds_read_temperature(10);
+    taskEXIT_CRITICAL();
+}    
+
+}
+
+void TimerTask(xTimerHandle xTimer){
+    if(!term.time_left){
+        if(server_addr != NULL){
+            uip_connect(server_addr, HTONS(8080));
+            term.time_left=term.period;
+        }
     }
-    
+    term.time_left--;
 
 }
 
 
-
 void init_structs(){
     message_q = xQueueCreate(10,sizeof(uint8_t));
+    new_data = xQueueCreate(10,sizeof(sensor));
+
+    door.id = 0x1234567812345678;
+    door.period = -1;
+    term.id = 0x0987654321098765;
+    term.period = 6;
+    term.time_left = 6;
 
 }
 
@@ -144,12 +181,17 @@ void main(void)
 
     init_structs();
     rtc_init(); 
+    ds_init();
 
+//    xTimerCreate("tmr", configTICK_RATE_HZ, pdTRUE, 0, TimerTask);
+	xTaskCreate( vTask_check_data, ( signed char * ) "dtc",
+			configMINIMAL_STACK_SIZE, NULL, 1, ( xTaskHandle * ) NULL);
     xTaskCreate( vTask_uIP_periodic, ( signed char * ) "uIPp",
-            configMINIMAL_STACK_SIZE*2, NULL, 1, ( xTaskHandle * ) NULL);
+            configMINIMAL_STACK_SIZE, NULL, 1, ( xTaskHandle * ) NULL);
 
 	xTaskCreate( vTask_uIP, ( signed char * ) "uIP",
-			configMINIMAL_STACK_SIZE*2, NULL, 2, ( xTaskHandle * ) NULL);
+			configMINIMAL_STACK_SIZE, NULL, 2, ( xTaskHandle * ) NULL);
+
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
@@ -159,3 +201,4 @@ void main(void)
         ;
     }
 }
+
