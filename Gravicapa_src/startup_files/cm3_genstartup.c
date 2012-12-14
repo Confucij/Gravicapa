@@ -15,6 +15,7 @@
  * @return 
  */
 #include "stm32f10x.h"
+#include "misc.h"
 //TODO Почему-то не видело объявления в "stm32f10x.h" скопипастил сюда. Костыль. Поправить. Ага, поправить. Так оно тут и будет.
 #define  RCC_CFGR_PLLSRC_HSE                ((uint32_t)0x00010000)        /*!< HSE clock selected as PLL entry clock source */
 extern int main(void);
@@ -45,7 +46,7 @@ void DebugMon_Handler(void) __attribute__ ((weak, alias ("Dummy_Handler")));
 void PendSV_Handler(void) __attribute__ ((weak, alias ("Dummy_Handler")));
 void SysTick_Handler(void) __attribute__ ((weak, alias ("Dummy_Handler")));
 extern void TIM6_DAC_IRQHandler();
-
+extern void EXTI4_handler();
 /**
  * The chip specific (STM32L1xx or F1, or LPC, or TI etc) vectors are in a 
  * chip specific file.  by placing them in a subsection, they can be linked in
@@ -146,27 +147,13 @@ if ( (RCC->CR & RCC_CR_HSERDY) != RESET)
   	}
 }
 
-void __attribute__((noreturn, naked)) Reset_Handler() {
-    unsigned long *src;
-    unsigned long *dest;
-    
-    src = &__text_end;
-    dest = &__data_start;
-    if (src != dest)
-        while(dest < &__data_end)
-            *(dest++) = *(src++);
- 
-    dest = &__bss_start;
-    while(dest < &__bss_end)
-        *(dest++) = 0;
-	SystemInit();
-	main();
-}
 
 /**
  * This table contains the core Coretex vectors, and should be linked first.
  * You should link any chip specific tables after this.
  */
+
+
 void *vector_table[] __attribute__ ((section(".vectors"))) = {
 	&_estack,
 	Reset_Handler,
@@ -187,6 +174,35 @@ void *vector_table[] __attribute__ ((section(".vectors"))) = {
 };
 
 
+void __attribute__((noreturn, naked)) Reset_Handler() {
+    unsigned long *src;
+    unsigned long *dest;
+    
+    src = &__text_end;
+    dest = &__data_start;
+    if (src != dest)
+        while(dest < &__data_end)
+            *(dest++) = *(src++);
+ 
+    dest = &__bss_start;
+    while(dest < &__bss_end)
+        *(dest++) = 0;
+     static unsigned int fstack;
+     fstack = (unsigned int)vector_table[0];
+  __asm__ __volatile__
+    (
+     "ldr sp, %0\n\t"
+     : 
+     : "m"(fstack)
+     : "sp"
+    );
+
+    NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0);
+	SystemInit();
+	main();
+}
+
+
 void *other_vector_table[] __attribute__ ((section(".vectors.other"))) = {
 0, // Window watchdog interrupt 
 0,
@@ -198,7 +214,7 @@ void *other_vector_table[] __attribute__ ((section(".vectors.other"))) = {
 0,
 0,
 0,
-0,
+EXTI4_handler,
 0,
 0,
 0,

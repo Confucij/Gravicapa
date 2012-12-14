@@ -7,18 +7,23 @@
 void vApplicationIdleHook( void){
 
 
-
 }
 
 /*If we have problems with stack we got here*/
 void vApplicationStackOverflowHook( xTaskHandle xTask, signed portCHAR *pcTaskName ){
 
 
+//    for(;;){
+//
+//    }
 
 }
 
 /*Hook that get called if pvPortMalloc() ever returns NULL*/
 void vApplicationMallocFailedHook( void ){
 
+    for(;;){
+
+    }
 
 }
