@@ -20,6 +20,8 @@
 
 #define BUF ((struct uip_eth_hdr *)&uip_buf[0])
 xQueueHandle message_q;
+/*Server addres*/
+extern uip_ipaddr_t* server_addr;
 
 uint8_t tmp;
 
@@ -117,6 +119,19 @@ void vTask_uIP(void *pvParameters) {
         }
     }
 }
+
+/*Periodic function. Check if any data available*/
+void vTask_check_data(void* param){
+    
+    /*if we dont know where server is*/
+    if(server_addr==NULL){
+        return 1;
+    }
+    
+
+}
+
+
 
 void init_structs(){
     message_q = xQueueCreate(10,sizeof(uint8_t));

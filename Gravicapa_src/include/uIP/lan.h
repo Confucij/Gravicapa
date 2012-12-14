@@ -47,6 +47,7 @@ void lan_appcall(void);
 
 void lan_init(void);
 
+
 #define APP_PORT 12345
 #define MAGIC_WORD "B19B00B5"
 #define FUNC_WRONG 0

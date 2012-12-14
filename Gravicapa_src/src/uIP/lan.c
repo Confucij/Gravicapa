@@ -22,8 +22,8 @@
  * uip.h (since this cannot be included in hello-world.h) and
  * <string.h>, since we use the memcpy() function in the code.
  */
-#include "lan.h"
 #include "uip.h"
+#include "lan.h"
 
 #include "rtc.h"
 
@@ -31,7 +31,10 @@
 #include <stdlib.h>
 
 static uint8_t cgi_path[50];
-static uip_ipaddr_t* server_addr;
+uip_ipaddr_t* server_addr=NULL;
+
+
+/*function check if there any data to send out*/
 
 static uint8_t func_num(const char * func){
 
@@ -80,6 +83,7 @@ static uint8_t func_num(const char * func){
      reverse(s);
  }
 
+/*stdlib function make bigbadaboom */
 uint32_t atoi_s(char* str){
 
 uint16_t len=strlen(str);
@@ -195,7 +199,10 @@ static uint8_t b19b00b5_process(){
  * It sends data to server.                                             
  */
 static uint8_t http_send_data(){
-
+    
+    char time[10];
+    itoa(rtc_get(),(char*)time);
+    uip_send(time,strlen(time));
 
 }
 
@@ -229,12 +236,19 @@ void lan_appcall(void){
     switch(uip_conn->lport) {
         case HTONS(APP_PORT):
             if(uip_newdata()){
+                /* we use single package exchange so after processing
+                 * we close the connection 
+                 */
                 b19b00b5_process();
-//              uip_close();
+                uip_close();
             }
-            break;
-        case HTONS(80):
-            http_send_data();
+            return;
+        case HTONS(8080):
+            if(uip_connected()){
+                http_send_data();
+            }        
+           return; 
+        default:            
             break;
     }
 }
