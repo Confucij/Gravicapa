@@ -25,7 +25,7 @@
 xQueueHandle message_q;
 xQueueHandle new_data;
 /*Server addres*/
-extern uip_ipaddr_t* server_addr;
+extern uint16_t server_addr[2];
 
 
 uint16_t c_state,p_state;
@@ -140,23 +140,25 @@ void vTask_check_data(void* param){
 //        return 1;
 //    }
 for(;;){
-    taskENTER_CRITICAL();
-    ds_start_convert_single(10);
-    taskEXIT_CRITICAL();
+//    taskENTER_CRITICAL();
+//    ds_start_convert_single(10);
+//    taskEXIT_CRITICAL();
     vTaskDelay(configTICK_RATE_HZ*5);
-    taskENTER_CRITICAL();
-    term.value = ds_read_temperature(10);
-    taskEXIT_CRITICAL();
+//    taskENTER_CRITICAL();
+//    term.value = ds_read_temperature(10);
+//    taskEXIT_CRITICAL();
 }    
 
 }
 
 void TimerTask(xTimerHandle xTimer){
     if(!term.time_left){
-        if(server_addr != NULL){
-            uip_connect(server_addr, HTONS(8080));
-            term.time_left=term.period;
+        if(server_addr[0] != 0 && server_addr[1] !=0){
+           if(uip_connect(&server_addr, HTONS(12346))){
+                xQueueSend(new_data,&term,0);
+           }
         }
+    term.time_left=term.period;
     }
     term.time_left--;
 
@@ -183,7 +185,7 @@ void main(void)
     rtc_init(); 
     ds_init();
 
-//    xTimerCreate("tmr", configTICK_RATE_HZ, pdTRUE, 0, TimerTask);
+    xTimerReset(xTimerCreate("tmr", configTICK_RATE_HZ, pdTRUE, 0, TimerTask),0);
 	xTaskCreate( vTask_check_data, ( signed char * ) "dtc",
 			configMINIMAL_STACK_SIZE, NULL, 1, ( xTaskHandle * ) NULL);
     xTaskCreate( vTask_uIP_periodic, ( signed char * ) "uIPp",

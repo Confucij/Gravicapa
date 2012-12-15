@@ -26,13 +26,21 @@
 #include "lan.h"
 
 #include "rtc.h"
+#include "sensors.h"
+
+#include "FreeRTOSConfig.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+
 
 #include <string.h>
 #include <stdlib.h>
 
 static uint8_t cgi_path[50];
-uip_ipaddr_t* server_addr=NULL;
-
+uint16_t server_addr[2]={0,0};
+extern xQueueHandle new_data;
+extern sensor term,door;
 
 /*function check if there any data to send out*/
 
@@ -67,7 +75,7 @@ static uint8_t func_num(const char * func){
  }
 
 /* itoa:  конвертируем n в символы в s */
- void itoa(int n, char s[])
+ void itoa(uint64_t n, char s[])
  {
      int i, sign;
  
@@ -115,6 +123,8 @@ int16_t strtok_s(char* s,uint16_t len, char delim,char* buf){
     }
     
 }
+
+uint8_t reg;
 
 
 /*
@@ -175,7 +185,9 @@ static uint8_t b19b00b5_process(){
                 uint32_t time=atoi_s((char*)buf);
                 rtc_set(time);
                 
-                server_addr = uip_conn->ripaddr;
+                server_addr[0] = uip_conn->ripaddr[0];
+                server_addr[1] = uip_conn->ripaddr[1];
+                reg = 2;
                 break;
             }
             case FUNC_GETTIME:{
@@ -199,10 +211,138 @@ static uint8_t b19b00b5_process(){
  * It sends data to server.                                             
  */
 static uint8_t http_send_data(){
+    if(reg == 1){
+        char msg[100];
+        memset(msg,0,100);
+        strcpy(msg,"POST ");
+        uint8_t len = strlen(msg);
+        strcpy(msg+len,cgi_path);
+        len = strlen(msg);
+        strcpy(msg+len,"?func=reg&id=");
+        len = strlen(msg);
+        uint8_t tmp[20];
+        itoa(door.id,tmp);
+        strcpy(msg+len,tmp);
+        len = strlen(msg);
+        strcpy(msg+len,"&ip=");
+        len = strlen(msg);
+
+        uint8_t oct=uip_hostaddr[0];
+        itoa(oct,tmp);
+        uint8_t tmp_len=strlen(tmp);
+        tmp[tmp_len]='.';
+        tmp_len++;
+        
+        oct=uip_hostaddr[0] >> 8;
+        itoa(oct,tmp+tmp_len);
+        tmp_len=strlen(tmp);
+        tmp[tmp_len]='.';
+        tmp_len++;
+
+        oct=uip_hostaddr[1];
+        itoa(oct,tmp+tmp_len);
+        tmp_len=strlen(tmp);
+        tmp[tmp_len]='.';
+        tmp_len++;
+
+        oct=uip_hostaddr[1] >> 8;
+        itoa(oct,tmp+tmp_len);
+        tmp_len=strlen(tmp);
+       
+        strcpy(msg+len,tmp);
+        
+        len = strlen(msg);
+        strcpy(msg+len," HTTP/1.0\n\n");
+        uip_send(msg,strlen(msg));
+        
+        reg--;
+        return 0;
+
+    }
+
+    if(reg == 2){
+        char msg[100];
+        memset(msg,0,100);
+        strcpy(msg,"POST ");
+        uint8_t len = strlen(msg);
+        strcpy(msg+len,cgi_path);
+        len = strlen(msg);
+        strcpy(msg+len,"?func=reg&id=");
+        len = strlen(msg);
+        uint8_t tmp[20];
+        itoa(term.id,tmp);
+        strcpy(msg+len,tmp);
+        len = strlen(msg);
+        strcpy(msg+len,"&ip=");
+        len = strlen(msg);
+
+        uint8_t oct=uip_hostaddr[0];
+        itoa(oct,tmp);
+        uint8_t tmp_len=strlen(tmp);
+        tmp[tmp_len]='.';
+        tmp_len++;
+        
+        oct=uip_hostaddr[0] >> 8;
+        itoa(oct,tmp+tmp_len);
+        tmp_len=strlen(tmp);
+        tmp[tmp_len]='.';
+        tmp_len++;
+
+        oct=uip_hostaddr[1];
+        itoa(oct,tmp+tmp_len);
+        tmp_len=strlen(tmp);
+        tmp[tmp_len]='.';
+        tmp_len++;
+
+        oct=uip_hostaddr[1] >> 8;
+        itoa(oct,tmp+tmp_len);
+        tmp_len=strlen(tmp);
+       
+        strcpy(msg+len,tmp);
+        
+        len = strlen(msg);
+        strcpy(msg+len," HTTP/1.0\n\n");
+        uip_send(msg,strlen(msg));
+        
+        reg--;
+        return 0;
+
+    }
+    sensor sens;
+    if(xQueueReceive(new_data,&sens,0)==pdPASS){
+        char msg[100];
+        memset(msg,0,100);
+        strcpy(msg,"POST ");
+        uint8_t len = strlen(msg);
+        strcpy(msg+len,cgi_path);
+        len = strlen(msg);
+        strcpy(msg+len,"?func=setdata&id=");
+        len = strlen(msg);
+        uint8_t tmp[20];
+        itoa(sens.id,tmp);
+        strcpy(msg+len,tmp);
+        len = strlen(msg);
+        strcpy(msg+len,"&value=");
+        len = strlen(msg);
+        memset(tmp,0,20);
+        itoa(sens.value,tmp);
+        strcpy(msg+len,tmp);
+        len = strlen(msg);
+        strcpy(msg+len,"&time=");
+        len = strlen(msg);
+        memset(tmp,0,20);
+        itoa(rtc_get(),tmp);
+        strcpy(msg+len,tmp);
+        len = strlen(msg);
+        strcpy(msg+len," HTTP/1.0\n\n");
+        uip_send(msg,strlen(msg));
+        return 0; 
+    }
+        uip_close();
     
-    char time[10];
-    itoa(rtc_get(),(char*)time);
-    uip_send(time,strlen(time));
+//    char time[10];
+//    itoa(rtc_get(),(char*)time);
+//    uip_send("HELLO",strlen("HELLO"));
 
 }
 
@@ -241,15 +381,26 @@ void lan_appcall(void){
                  */
                 b19b00b5_process();
                 uip_close();
+                return;
+            }
+            if(uip_closed()){
+               uip_connect(&server_addr, HTONS(12346));
             }
             return;
-        case HTONS(8080):
+        default:
             if(uip_connected()){
                 http_send_data();
+                return;
             }        
+            if(uip_poll() || uip_newdata()){
+                uip_close();
+                return;
+            }
+            if(uip_closed() && (reg > 0 || uxQueueMessagesWaiting(new_data))){
+                uip_connect(&server_addr, HTONS(12346)); 
+                return;
+            }
            return; 
-        default:            
-            break;
     }
 }
 /*---------------------------------------------------------------------------*/

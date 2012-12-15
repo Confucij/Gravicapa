@@ -85,13 +85,12 @@ typedef uint16_t u16_t;
  * \hideinitializer
  */
 typedef unsigned short uip_stats_t;
-
 /**
  * Maximum number of TCP connections.
  *
  * \hideinitializer
  */
-#define UIP_CONF_MAX_CONNECTIONS 2
+#define UIP_CONF_MAX_CONNECTIONS 5
 
 /**
  * Maximum number of listening TCP ports.
