@@ -42,7 +42,12 @@ void EXTI4_handler(){
 }
 
 void EXTI5_9_handler(){
-   door.value ^= 1; 
+    door.value ^= 1; 
+    xQueueSendFromISR(new_data,&door,0);
+    if(server_addr[0] != 0 && server_addr[1] !=0){
+        uip_connect(&server_addr, HTONS(80));
+    }
+    EXTI->PR |= 0xFFFF;
 
 }
 
@@ -140,13 +145,13 @@ void vTask_check_data(void* param){
 //        return 1;
 //    }
 for(;;){
-//    taskENTER_CRITICAL();
-//    ds_start_convert_single(10);
-//    taskEXIT_CRITICAL();
+    taskENTER_CRITICAL();
+    ds_start_convert_single(10);
+    taskEXIT_CRITICAL();
     vTaskDelay(configTICK_RATE_HZ*5);
-//    taskENTER_CRITICAL();
-//    term.value = ds_read_temperature(10);
-//    taskEXIT_CRITICAL();
+    taskENTER_CRITICAL();
+    term.value = ds_read_temperature(10);
+    taskEXIT_CRITICAL();
 }    
 
 }
@@ -154,7 +159,7 @@ for(;;){
 void TimerTask(xTimerHandle xTimer){
     if(!term.time_left){
         if(server_addr[0] != 0 && server_addr[1] !=0){
-           if(uip_connect(&server_addr, HTONS(12346))){
+           if(uip_connect(&server_addr, HTONS(80))){
                 xQueueSend(new_data,&term,0);
            }
         }
@@ -164,6 +169,24 @@ void TimerTask(xTimerHandle xTimer){
 
 }
 
+void door_init(){
+    RCC->APB2ENR |= RCC_APB2ENR_AFIOEN;
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
+
+    GPIO_InitTypeDef GPIO_InitStruct;
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6;
+    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
+
+    GPIO_Init(GPIOC, &GPIO_InitStruct);
+    EXTI->FTSR |= EXTI_FTSR_TR6;
+    EXTI->RTSR |= EXTI_FTSR_TR6;
+    EXTI->IMR |= EXTI_IMR_MR6;
+    EXTI->EMR |= EXTI_EMR_MR6;
+    AFIO->EXTICR[1] |=  AFIO_EXTICR2_EXTI6_PC;
+    NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+}
 
 void init_structs(){
     message_q = xQueueCreate(10,sizeof(uint8_t));
@@ -171,6 +194,7 @@ void init_structs(){
 
     door.id = 0x1234567812345678;
     door.period = -1;
+    door.value = 0;
     term.id = 0x0987654321098765;
     term.period = 6;
     term.time_left = 6;
@@ -184,6 +208,7 @@ void main(void)
     init_structs();
     rtc_init(); 
     ds_init();
+    door_init();
 
     xTimerReset(xTimerCreate("tmr", configTICK_RATE_HZ, pdTRUE, 0, TimerTask),0);
 	xTaskCreate( vTask_check_data, ( signed char * ) "dtc",

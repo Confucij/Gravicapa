@@ -47,6 +47,7 @@ void PendSV_Handler(void) __attribute__ ((weak, alias ("Dummy_Handler")));
 void SysTick_Handler(void) __attribute__ ((weak, alias ("Dummy_Handler")));
 extern void TIM6_DAC_IRQHandler();
 extern void EXTI4_handler();
+extern void EXTI5_9_handler();
 /**
  * The chip specific (STM32L1xx or F1, or LPC, or TI etc) vectors are in a 
  * chip specific file.  by placing them in a subsection, they can be linked in
@@ -117,7 +118,7 @@ if ( (RCC->CR & RCC_CR_HSERDY) != RESET)
     	/* RCC_CFGR_PLLMULL9 - множитель на 9. Если нужна другая частота, не 72МГц */
     	/* то выбираем другой множитель. */
     	RCC->CFGR &= (uint32_t)((uint32_t)~(RCC_CFGR_PLLSRC | RCC_CFGR_PLLXTPRE | RCC_CFGR_PLLMULL));
-    	RCC->CFGR |= (uint32_t)(RCC_CFGR_PLLSRC_HSE | RCC_CFGR_PLLMULL3);
+    	RCC->CFGR |= (uint32_t)(RCC_CFGR_PLLSRC_HSE | RCC_CFGR_PLLMULL6);
  
     	/* Включаем PLL */
     	RCC->CR |= RCC_CR_PLLON;
@@ -227,7 +228,7 @@ EXTI4_handler,
 0,
 0,
 0,
-0,
+EXTI5_9_handler,
 0,
 0,
 0,

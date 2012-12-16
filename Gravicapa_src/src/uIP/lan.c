@@ -384,7 +384,7 @@ void lan_appcall(void){
                 return;
             }
             if(uip_closed()){
-               uip_connect(&server_addr, HTONS(12346));
+               uip_connect(&server_addr, HTONS(80));
             }
             return;
         default:
@@ -397,7 +397,7 @@ void lan_appcall(void){
                 return;
             }
             if(uip_closed() && (reg > 0 || uxQueueMessagesWaiting(new_data))){
-                uip_connect(&server_addr, HTONS(12346)); 
+                uip_connect(&server_addr, HTONS(80)); 
                 return;
             }
            return; 
